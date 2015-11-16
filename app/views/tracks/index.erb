@@ -1,0 +1,18 @@
+<h1>All Tracks</h1>
+<hr/>
+
+<% @tracks.each do |track| %>
+  <div class="track">
+    <h3><a href="<%= track.url %>">
+    <%= track.song_title %>
+    </a></h3>
+    (by: <%= track.author %>)
+  </div>
+<% end %>
+
+<hr/>
+<form method="post" action="/tracks">
+  <div>
+    <input = type="submit" value="Generate a random track!">
+  </div>
+</form>
