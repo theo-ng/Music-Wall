@@ -1,11 +1,22 @@
 <h1>All Tracks</h1>
 <hr/>
 
+<% if @message %>
+  <p><%= @message %></p>
+<% end %>
+
 <% @tracks.each do |track| %>
   <div class="track">
-    <h3><a href="<%= track.url %>">
-    <%= track.song_title %>
-    </a></h3>
+  <form method="post" action="/upvote">
+    <h3>
+    <%= track.votes.count %>
+    <a href="<%= track.url %>"><%= track.song_title %></a>
+    <input type="hidden" name="track_id" value="<%= track.id%>">
+    <% unless track.votes.find_by_user_id(session[:user_id]) %>
+      <input type="submit" class="btn btn-sm" value='Like'/>
+    <% end %>
+    </h3>
+  </form>
     (by: <%= track.author %>)
   </div>
 <% end %>
@@ -13,6 +24,6 @@
 <hr/>
 <form method="post" action="/tracks">
   <div>
-    <input = type="submit" value="Generate a random track!">
+    <input type="submit" value="Generate a random track!"/>
   </div>
 </form>

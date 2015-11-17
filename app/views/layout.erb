@@ -18,6 +18,21 @@
   <title></title>
 </head>
 <body>
+  <% if session[:user_id] %>
+    <div>Logged in user: <%= session[:user_id] %></div>
+    <form method= "POST" action="/logout">
+      <input type="submit" value="Logout"/>
+    </form>
+  <% else %>
+    <form method="POST" action="/login">
+      <input type="text" name="email" placeholder="Email"/>
+      <input type="text" name="password" placeholder="Password"/>
+      <input type="submit" value="Login"/>
+    </form>
+    <form method="GET" action="/signup">
+      <input type="submit" value="Sign-Up"/>
+    </form>
+  <% end %>
   <%= yield %>
 </body>
 </html>
