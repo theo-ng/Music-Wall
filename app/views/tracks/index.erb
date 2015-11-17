@@ -1,19 +1,17 @@
 <h1>All Tracks</h1>
 <hr/>
 
-<% if @message %>
-  <p><%= @message %></p>
-<% end %>
-
 <% @tracks.each do |track| %>
   <div class="track">
   <form method="post" action="/upvote">
     <h3>
     <%= track.votes.count %>
     <a href="<%= track.url %>"><%= track.song_title %></a>
-    <input type="hidden" name="track_id" value="<%= track.id%>">
-    <% unless track.votes.find_by_user_id(session[:user_id]) %>
-      <input type="submit" class="btn btn-sm" value='Like'/>
+    <% if session[:user_id] %>
+      <input type="hidden" name="track_id" value="<%= track.id%>">
+      <% unless track.votes.find_by_user_id(session[:user_id]) %>
+        <input type="submit" class="btn btn-sm" value='Like'/>
+      <% end %>
     <% end %>
     </h3>
   </form>

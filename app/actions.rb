@@ -19,10 +19,11 @@ get '/' do
 end
 
 post '/login' do
-  users = User.where(email: params[:email]).where(password: params[:password])
-
-  unless users.empty?
-    session[:user_id] = users.first.id
+  session[:attempt] = params[:email]
+  user = User.find_by_email(params[:email])
+  if user && BCrypt::Password.new(user.password) == params[:password]
+  # if user.password == params[:password]
+    session[:user_id] = user.id
     redirect '/tracks'
   else
     @message = 'Invalid email and password'
@@ -42,14 +43,15 @@ get '/signup' do
 end
 
 post '/signup' do
+  pass = BCrypt::Password.create(params[:password])
   @user = User.new(
     email: params[:email],
-    password: params[:password]
+    password: pass
     )
   if @user.save
     redirect '/tracks'
   else
-    erb :'signup'
+    redirect '/signup'
   end
 end
 
@@ -68,7 +70,7 @@ post '/tracks' do
   if @track.save
     redirect '/tracks'
   else
-    erb :'tracks/index'
+    redirect 'tracks'
   end
 end
 
@@ -80,6 +82,6 @@ post '/upvote' do
   if @vote.save
     redirect '/tracks'
   else
-    erb :'tracks/index'
+    redirect '/tracks'
   end
 end

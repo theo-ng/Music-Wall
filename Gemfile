@@ -12,6 +12,7 @@ gem 'puma'
 gem 'tux'
 
 gem 'random-word'
+gem 'bcrypt'
 
 group :development, :test do
   gem 'byebug'

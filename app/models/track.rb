@@ -14,7 +14,7 @@ class Track < ActiveRecord::Base
 
   class << self
     def ordered_list
-      Track.select("tracks.*, COUNT(votes.id) AS votes").joins("LEFT OUTER JOIN votes ON votes.track_id = tracks.id").group("tracks.id").order("votes DESC")
+      Track.all.order("votes_count DESC")
     end
   end
 end
