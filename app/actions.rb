@@ -12,6 +12,20 @@ helpers do
   def generate_author
     RandomWord.nouns.next.capitalize
   end
+
+  def error_handling
+    @errors = session[:errors] if session[:errors]
+    session[:errors] = nil
+  end
+
+  def current_user
+    @current_user = User.find(session[:user_id]) if session[:user_id]
+  end
+end
+
+before do
+  current_user
+  error_handling
 end
 
 get '/' do
@@ -22,7 +36,6 @@ post '/login' do
   session[:attempt] = params[:email]
   user = User.find_by_email(params[:email])
   if user && BCrypt::Password.new(user.password) == params[:password]
-  # if user.password == params[:password]
     session[:user_id] = user.id
     redirect '/tracks'
   else
@@ -84,4 +97,34 @@ post '/upvote' do
   else
     redirect '/tracks'
   end
+end
+
+get '/tracks/:id' do
+  @track = Track.find params[:id]
+  if @track
+    erb :'tracks/show'
+  else
+    redirect '/tracks'
+  end
+end
+
+post '/review/:id' do
+  # byebug
+  @review = Review.new(
+    content: params[:content],
+    user_id: current_user.id,
+    track_id: params[:id],
+    rating: params[:rating]
+    )
+  if @review.save
+    redirect "/tracks/#{@review.track_id}"
+  else
+    redirect "/tracks/#{@review.track_id}"
+  end
+end
+
+delete '/review/:id' do
+  review = Review.find(params[:id])
+  review.destroy
+  redirect "/tracks/#{review.track_id}"
 end

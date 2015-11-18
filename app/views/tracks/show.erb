@@ -1,0 +1,61 @@
+<% if session[:user_id] %>
+  <div>Logged in user: <%= session[:user_id] %></div>
+  <form method= "POST" action="/logout">
+    <input class="button" type="submit" value="Logout"/>
+  </form>
+<% else %>
+  <form method="POST" action="/login">
+    <input type="text" name="email" value="<%= session[:attempt] %>"/>
+    <input type="password" name="password" placeholder="Password"/>
+    <input class="button" type="submit" value="Login"/>
+  </form>
+  <form method="GET" action="/signup">
+    <input type="submit" value="Sign-Up"/>
+  </form>
+<% end %>
+  <hr/>
+  <iframe width="420" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" frameborder="0" allowfullscreen></iframe>
+
+  <h3><a href="<%= @track.url %>"><%= @track.song_title %></a>  
+  By: <%= @track.author %>
+  </h3>
+
+  </br>
+  <% if session[:user_id] %>
+    <% unless @track.reviews.find_by_user_id(@current_user) %>
+      <form method="POST" action="/review/<%=@track.id%>">
+        <div class="form-group">
+          <textarea class="form-control" name="content" rows="5" id="content" placeholder="Your review here"></textarea>
+          </br>
+          <select name="rating">
+            <option value=1>1</option>
+            <option value=2>2</option>
+            <option value=3>3</option>
+            <option value=4>4</option>
+            <option value=5>5</option>
+          </select>
+          <input class="button" type="submit" value="Submit Review"/>
+        </div>
+      </form>
+    <% end %>
+  <% else %>
+    Sign in or Sign up in order to review this track
+  <% end %>
+  <hr/>
+  <% @track.reviews.each do |review| %>
+    <div class="review">
+      <h2>Reviews</h2>
+      <h3><%= review.rating %>/5</h3>
+      <%= review.content %>
+      </br>
+      by: <%= review.user.email %>
+      <% if review.user_id == @current_user.id %>
+        <form method="post" action="/review/<%=review.id%>">
+         <input type="hidden" name="_method" value="DELETE" />
+         <button>Delete</button>
+        </form>
+      <% end %>
+    </div>
+  <% end %>
+<hr/>
+<a href="/tracks">Back to All tracks</a>

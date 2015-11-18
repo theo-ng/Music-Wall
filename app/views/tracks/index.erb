@@ -1,3 +1,22 @@
+<% if @errors %>
+  <h1><%= @errors %></h1>
+<% end %>
+
+<% if session[:user_id] %>
+  <div>Logged in user: <%= session[:user_id] %></div>
+  <form method= "POST" action="/logout">
+    <input class="button" type="submit" value="Logout"/>
+  </form>
+<% else %>
+  <form method="POST" action="/login">
+    <input type="text" name="email" value="<%= session[:attempt] %>"/>
+    <input type="password" name="password" placeholder="Password"/>
+    <input class="button" type="submit" value="Login"/>
+  </form>
+  <form method="GET" action="/signup">
+    <input type="submit" value="Sign-Up"/>
+  </form>
+<% end %>
 <h1>All Tracks</h1>
 <hr/>
 
@@ -6,7 +25,7 @@
   <form method="post" action="/upvote">
     <h3>
     <%= track.votes.count %>
-    <a href="<%= track.url %>"><%= track.song_title %></a>
+    <a href="/tracks/<%= track.id %>"><%= track.song_title %></a>
     <% if session[:user_id] %>
       <input type="hidden" name="track_id" value="<%= track.id%>">
       <% unless track.votes.find_by_user_id(session[:user_id]) %>
