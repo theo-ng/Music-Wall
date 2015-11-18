@@ -1,5 +1,5 @@
-<% if session[:user_id] %>
-  <div>Logged in user: <%= session[:user_id] %></div>
+<% if @current_user %>
+  <div>Logged in user: <%= @current_user.id %></div>
   <form method= "POST" action="/logout">
     <input class="button" type="submit" value="Logout"/>
   </form>
@@ -21,7 +21,7 @@
   </h3>
 
   </br>
-  <% if session[:user_id] %>
+  <% if @current_user %>
     <% unless @track.reviews.find_by_user_id(@current_user) %>
       <form method="POST" action="/review/<%=@track.id%>">
         <div class="form-group">
@@ -49,11 +49,13 @@
       <%= review.content %>
       </br>
       by: <%= review.user.email %>
-      <% if review.user_id == @current_user.id %>
-        <form method="post" action="/review/<%=review.id%>">
-         <input type="hidden" name="_method" value="DELETE" />
-         <button>Delete</button>
-        </form>
+      <% if @current_user %>
+        <% if review.user_id == @current_user.id %>
+          <form method="post" action="/review/<%=review.id%>">
+           <input type="hidden" name="_method" value="DELETE" />
+           <button>Delete</button>
+          </form>
+        <% end %>
       <% end %>
     </div>
   <% end %>

@@ -82,8 +82,6 @@ post '/tracks' do
     )
   if @track.save
     redirect '/tracks'
-  else
-    redirect 'tracks'
   end
 end
 
@@ -93,8 +91,6 @@ post '/upvote' do
     track_id: params[:track_id]
     )
   if @vote.save
-    redirect '/tracks'
-  else
     redirect '/tracks'
   end
 end
@@ -117,8 +113,6 @@ post '/review/:id' do
     rating: params[:rating]
     )
   if @review.save
-    redirect "/tracks/#{@review.track_id}"
-  else
     redirect "/tracks/#{@review.track_id}"
   end
 end
